@@ -5,6 +5,9 @@ import json
 import os
 dsNm = "val2017"
 catNms = ['person', 'car', 'bicycle']
+root = "E:/Resource/Dataset/COCO"  # addr of COCO
+dataDir = os.path.join(root, dsNm)
+annDir = os.path.join(root, "annotations/instances_{}.json").format(dsNm)
 
 INFO = {
     "description": "SubCOCO, sub dataset of COCO",
@@ -30,10 +33,6 @@ coco_output = {
         "annotations": []
     }
 
-root = "E:/Resource/Dataset/COCO/"  # addr of COCO
-dataDir = os.path.join(root, dsNm)
-annDir = os.path.join(root, "annotations/instances_{}.json").format(dsNm)
-
 # Initialize coco api
 coco = COCO(annDir)
 
@@ -53,5 +52,5 @@ cats = coco.loadCats(catIds)
 coco_output['categories'] = cats
 
 # save
-with open('{}SubCOCO/annotation-little.json'.format(root), 'w') as output_json_file:
+with open('{}/SubCOCO/annotation-little.json'.format(root), 'w') as output_json_file:
     json.dump(coco_output, output_json_file)
