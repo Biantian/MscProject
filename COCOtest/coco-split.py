@@ -7,7 +7,7 @@ import os
 import shutil
 from tqdm import tqdm
 dsNm = "train2017"
-catNms = ['person', 'car']
+catNms = ['bicycle', 'car', 'motorcycle', 'bus', 'truck']
 root = "E:/Resource/Dataset/COCO"  # addr of COCO
 dataDir = os.path.join(root, dsNm)
 annDir = os.path.join(root, "annotations/instances_{}.json").format(dsNm)
