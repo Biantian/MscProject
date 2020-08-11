@@ -1,1 +1,2 @@
 import pycocotools.coco
+import torchvision.models.detection
