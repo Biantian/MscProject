@@ -5,7 +5,7 @@ import numpy as np  # (pip install numpy)
 # from skimage import measure  # (pip install scikit-image)
 # from shapely.geometry import Polygon, MultiPolygon  # (pip install Shapely)
 
-DEBUG = False
+DEBUG = True
 
 
 class CocoSubset(datasets.CocoDetection):
@@ -22,7 +22,10 @@ class CocoSubset(datasets.CocoDetection):
         self.both_transform = both_transform
         self.target_transform = target_transform
         self.img_transform = img_transform
-
+        # get the categories
+        self.category_ids = sorted(self.coco.cats.keys())
+        self.ncategories = len(self.category_ids)
+        self.cat2idx = {self.category_ids[i]: i for i in range(self.ncategories)}
 
 
     # def create_sub_mask_annotation(self, sub_mask):
@@ -74,7 +77,7 @@ class CocoSubset(datasets.CocoDetection):
             xmax = np.max(pos[1])
             ymin = np.min(pos[0])
             ymax = np.max(pos[0])
-            boxes.append([xmin, ymin, xmax-xmin, ymax-ymin])
+            boxes.append([xmin, ymin, xmax, ymax])
             areas.append(masks[idx].sum())
         target_['boxes'] = torch.as_tensor(boxes, dtype=torch.float32)
         target_['areas'] = torch.as_tensor(areas, dtype=torch.float32)
@@ -99,17 +102,20 @@ class CocoSubset(datasets.CocoDetection):
         iscrowd = []
         image_id = target[0]['image_id']
         for ann in target:
-            labels.append(ann['category_id'])
+            labels.append(self.cat2idx[ann['category_id']])
             masks.append(self.coco.annToMask(ann))
             areas.append(ann['area'])
             boxes.append(ann['bbox'])
             iscrowd.append(ann['iscrowd'])
-
+        # transform boxes from [x, y, wight, height] to [xmin, ymin, xmax, ymax]
+        ann = np.array(boxes)
+        boxes = np.append(ann[:, :2], np.transpose([ann[:, 0] + ann[:, 2]]), axis=1)
+        boxes = np.append(boxes,  np.transpose([ann[:, 1] + ann[:, 3]]), axis=1)
         # put target elements together
         target_ = {"labels": torch.as_tensor(labels, dtype=torch.int64),
                    "masks": torch.as_tensor(masks, dtype=torch.uint8),
                    "areas": torch.as_tensor(areas, dtype=torch.float32),
-                   "boxes": torch.as_tensor(boxes, dtype=torch.float32),
+                   "boxes": torch.from_numpy(boxes).float(),
                    "image_id": torch.tensor([image_id]),
                    "iscrowd": torch.as_tensor(iscrowd, dtype=torch.int64)}
 
