@@ -1,19 +1,16 @@
 from pycocotools.coco import COCO
-import os
-import torch
-from torchvision.transforms import transforms
-from .engine import train_one_epoch, evaluate
-from .utils import *
-from .transforms import *
+import numpy as np
+annFile = 'E:/Resource/Dataset/COCO/SubCOCO/annotations/instances_train2017.json'
 
+# bounding box filter
 
-root = 'E:/Resource/Dataset/COCO/SubCOCO'
-annDir = os.path.join(root, 'annotations/instances_{}.json')
-# coco = COCO(annDir.format('train2017'))
-
-def get_transform(train):
-    transforms = []
-    transforms.append(T .ToTensor())
-    if train:
-        transforms.append(T.RandomHorizontalFlip(0.5))
-    return T.Compose(transforms)
+# initialize coco api
+coco = COCO(annFile)
+annIds = coco.getAnnIds()
+anns = coco.loadAnns(ids=annIds)
+deg_ann = {}
+for ann in anns:
+    bbox = np.array(ann['bbox'])
+    if (bbox[:2] < 0).any() or (bbox[2:] <= 0).any():
+        deg_ann.update({ann['id']: bbox})
+print(deg_ann)

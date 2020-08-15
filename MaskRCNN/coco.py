@@ -1,7 +1,6 @@
 import torch
-import numpy as np
 from torchvision import datasets
-import numpy as np  # (pip install numpy)
+import numpy as np
 # from skimage import measure  # (pip install scikit-image)
 # from shapely.geometry import Polygon, MultiPolygon  # (pip install Shapely)
 
