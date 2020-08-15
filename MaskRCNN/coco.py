@@ -77,7 +77,7 @@ class CocoSubset(datasets.CocoDetection):
             boxes.append([xmin, ymin, xmax-xmin, ymax-ymin])
             areas.append(masks[idx].sum())
         target_['boxes'] = torch.as_tensor(boxes, dtype=torch.float32)
-        target_['areas'] = areas
+        target_['areas'] = torch.as_tensor(areas, dtype=torch.float32)
         return target_
 
     def __getitem__(self, index):
