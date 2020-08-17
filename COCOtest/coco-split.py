@@ -6,14 +6,23 @@ import json
 import os
 import shutil
 from tqdm import tqdm
+'''
+dsNm_sub: name of dataset, subset of Coco
+dsNm: name of dataset, Coco dataset. eg. train2017, val2017
+catNms: categories kept in subset
+root: address of Coco dataset
+dataDir: address of Coco image data
+annDir: address of Coco annotation data
+'''
+dsNm_sub = "SubCOCO_Dog"
 dsNm = "train2017"
-catNms = ['bicycle', 'car', 'motorcycle', 'bus', 'truck']
+catNms = ['dog']
 root = "E:/Resource/Dataset/COCO"  # addr of COCO
 dataDir = os.path.join(root, dsNm)
 annDir = os.path.join(root, "annotations/instances_{}.json").format(dsNm)
 
 INFO = {
-    "description": "SubCOCO, sub dataset of COCO",
+    "description": "{} sub dataset of COCO".format(dsNm_sub),
     "url": "https://github.com/Biantian/MscProject/tree/master/COCOtest",
     "version": "0.1.0",
     "year": 2020,
@@ -60,7 +69,7 @@ cats = coco.loadCats(catIds)
 coco_output['categories'] = cats
 
 # save annotations
-output_folder = '{}/SubCOCO/annotations'.format(root)
+output_folder = '{}/{}/annotations'.format(root, dsNm_sub)
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 with open(os.path.join(output_folder, 'instances_{}.json'.format(dsNm)), 'w') as output_json_file:
@@ -69,7 +78,7 @@ print("Annotation created!")
 
 # copy images
 input_folder = os.path.join(root, dsNm)
-output_folder = os.path.join(root, 'SubCOCO', dsNm)
+output_folder = os.path.join(root, dsNm_sub, dsNm)
 print('Copying images\nfrom: {}\nto: {}\n'.format(input_folder, output_folder))
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
