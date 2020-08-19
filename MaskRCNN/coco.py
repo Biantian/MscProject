@@ -1,5 +1,5 @@
 import torch
-from torchvision import datasets
+from torchvision import datasets, transforms
 import numpy as np
 # from skimage import measure  # (pip install scikit-image)
 # from shapely.geometry import Polygon, MultiPolygon  # (pip install Shapely)
@@ -93,6 +93,10 @@ class CocoSubset(datasets.CocoDetection):
                 Both are FloatTensor.
         """
         img, target = super(CocoSubset, self).__getitem__(index)
+        # convert image to tensor
+        trans = transforms.ToTensor()
+        img = trans(img)
+
         # convert the annotations to mask
         labels = []
         masks = []
@@ -113,14 +117,15 @@ class CocoSubset(datasets.CocoDetection):
         # put target elements together
         target_ = {"labels": torch.as_tensor(labels, dtype=torch.int64),
                    "masks": torch.as_tensor(masks, dtype=torch.uint8),
-                   "areas": torch.as_tensor(areas, dtype=torch.float32),
+                   "area": torch.as_tensor(areas, dtype=torch.float32),
                    "boxes": torch.from_numpy(boxes).float(),
                    "image_id": torch.tensor([image_id]),
                    "iscrowd": torch.as_tensor(iscrowd, dtype=torch.int64)}
 
         # this will handle all kinds of transforms
         if self.both_transform is not None:
-            img, target_['masks'] = self.both_transform(img, target_['masks'])
+            img = self.both_transform(img)
+            target_['masks'] = self.both_transform(target_['masks'])
             self.update_target(target_)
         if self.img_transform is not None:
             img = self.img_transform(img)
@@ -133,7 +138,7 @@ class CocoSubset(datasets.CocoDetection):
 if DEBUG:
     import os
 
-    root = 'E:/Resource/Dataset/COCO/SubCOCO'
+    root = 'E:/Resource/Dataset/COCO/SubCOCO_Dog'
     annDir = os.path.join(root, 'annotations/instances_{}.json')
     coco_train = CocoSubset(os.path.join(root, 'train2017'),
                             annDir.format('train2017'))

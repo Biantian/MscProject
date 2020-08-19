@@ -29,6 +29,8 @@ File name: pytorch5.ipynb
 
 2. Result is weird, only predict one result.
 
+3. SGD meet local maximum, not enough data.
+
 File name: pytorch6.ipynb
 
 1. how data augmentation in PyTorch works.
