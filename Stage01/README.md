@@ -13,9 +13,21 @@ File name: pytorch2.ipynb.
 
 File name: pytorch3-nn.ipynb
 
-1. Build simple neural network. 
+1. Build MLPs.
 
-   Fully Connected Network with 4 layers.
+   learning rate = 0.001
+
+   epoch  = 10
+
+   | ID   | architecture                  | test error <br/>for <br/>best <br/>validation (%) | time () |
+   | ---- | ----------------------------- | ------------------------------------------------- | ------- |
+   | 1    | 1024, 512,10                  |                                                   |         |
+   | 2    | 1536,1024,512,10              |                                                   |         |
+   | 3    | 2048, 1536, 1024, 512,10      |                                                   |         |
+   | 4    | 2560, 2048, 1536,1024, 512,10 |                                                   |         |
+   | 5    | ？                            |                                                   |         |
+
+   如果结果一直都在变好的话再做提升吧。
 
 2. Train and Test
 
